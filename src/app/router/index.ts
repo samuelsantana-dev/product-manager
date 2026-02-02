@@ -1,9 +1,8 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
-import Dashboard from '../views/Dashboard.vue'
-import Gallery from '../views/Gallery.vue'
-import ImportView from '../views/ImportView.vue'
-
+import Dashboard from '@/modules/Dashboard/pages/Dashboard.vue'
+import Gallery from '@/modules/gallery/pages/Gallery.vue'
+import ImportView from '@/modules/Files/pages/ImportView.vue'
 export default createRouter({
   history: createWebHistory(),
   routes: [
