@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import ProductsTable from "@/modules/Dashboard/components/ProductsTable.vue";
 import MetricsCards from "@/modules/Dashboard/components/MetricCard.vue";
-import { computed } from "vue";
-import { ProductStatus } from "@/modules/Dashboard/types/product";
+import ProductsFilters from "@/modules/Dashboard/components/ProductsFilters.vue";
+import { ref, computed } from "vue";
+import { ProductStatus, type IProduct } from "@/modules/Dashboard/types/product";
 import { useProductsStore } from "@/modules/Dashboard/stores/products.store";
+
+const search = ref("");
+const statusFilter = ref<ProductStatus | "ALL">("ALL");
+const onlyWithImage = ref(false);
 
 const store = useProductsStore();
 
@@ -34,7 +39,38 @@ const averageScore = computed(() => {
   return Number((total / store.products.length).toFixed(2));
 });
 
-const filteredProducts = computed(() => store.products);
+const filteredProducts = computed(() => {
+  return store.products.filter((product) => {
+    const searchValue = search.value.toLowerCase();
+
+    const matchesSearch =
+      product.Name.toLowerCase().includes(searchValue) ||
+      product.EAN.includes(searchValue) ||
+      String(product.ID).includes(searchValue);
+
+    const matchesStatus =
+      statusFilter.value === "ALL" ||
+      product.Status === statusFilter.value;
+
+    const matchesImage =
+      !onlyWithImage.value || !!product.Mirakl_Image;
+
+    return matchesSearch && matchesStatus && matchesImage;
+  });
+});
+
+const handleEdit = (product: IProduct) => {
+  const newName = prompt("Novo nome do produto:", product.Name);
+
+  if (newName) {
+    store.updateProduct({
+      ...product,
+      Name: newName,
+    });
+  }
+};
+
+
 </script>
 
 <template>
@@ -63,9 +99,18 @@ const filteredProducts = computed(() => store.products);
         color="text-red-600"
       />
     </div>
+    <div>
+      <ProductsFilters :search="search" :status="statusFilter" :onlyWithImage="onlyWithImage"
+        @update:search="search = $event" @update:status="statusFilter = $event"
+        @update:onlyWithImage="onlyWithImage = $event" />
+    </div>
+    </div>
+     <div>
     <ProductsTable
       :products="filteredProducts"
-      @edit="store.products.find((p) => p.ID === $event.ID)"
+      @edit="handleEdit"
+      @delete="store.removeProduct"
     />
   </div>
+  
 </template>
