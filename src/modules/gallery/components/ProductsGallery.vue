@@ -1,43 +1,46 @@
 <script setup lang="ts">
-import { useProductsStore } from '@/modules/Dashboard/stores/products.store'
+import  GalleryEmptyState  from '@/modules/gallery/components/GalleryEmptyState.vue'
+import ProductCard from '@/shared/components/product/ProductCard.vue'
+import type { ProductStatus } from '@/modules/Dashboard/types/product'
+import GalleryFilters from '@/modules/gallery/components/GalleryFilters.vue'
+import { useProductGallery } from '../composables/useProductGallery';
 
-const store = useProductsStore()
+const props = defineProps<{
+  search: string
+  status: ProductStatus | 'ALL'
+  onlyWithImage: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:search', value: string): void
+  (e: 'update:status', value: ProductStatus | 'ALL'): void
+  (e: 'update:onlyWithImage', value: boolean): void
+}>()
+
+const { filteredProducts } = useProductGallery(props)
 </script>
 
-<template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    <div
-      v-for="product in store.products"
-      :key="product.ID"
-      class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition"
-    >
-      <div class="w-full h-40 bg-gray-100 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-        <img
-          v-if="product.Mirakl_Image"
-          :src="product.Mirakl_Image"
-          :alt="product.Name"
-          class="object-contain h-full"
-        />
-        <span v-else class="text-gray-400 text-sm">Sem imagem</span>
-      </div>
-
-      <h3 class="font-semibold text-gray-800 text-sm mb-2 line-clamp-2">
-        {{ product.Name }}
-      </h3>
-
-      <span
-        class="inline-block px-2 py-1 text-xs rounded-full mb-2"
-        :class="product.Status === 'OK'
-          ? 'bg-green-100 text-green-700'
-          : 'bg-red-100 text-red-700'"
-      >
-        {{ product.Status === 'OK' ? 'Disponível' : 'Indisponível' }}
-      </span>
-
-      <!-- Score -->
-      <div class="text-sm text-gray-600 mt-2">
-        <strong>Score:</strong> {{ product.Score }}
-      </div>
+<<template>
+  <div class="flex flex-col gap-8">
+    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+      <GalleryFilters
+        :search="props.search"
+        :status="props.status"
+        :onlyWithImage="props.onlyWithImage"
+        @update:search="emit('update:search', $event)"
+        @update:status="emit('update:status', $event)"
+        @update:onlyWithImage="emit('update:onlyWithImage', $event)"
+      />
     </div>
+
+    <div v-if="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <ProductCard 
+        v-for="product in filteredProducts" 
+        :key="product.ID" 
+        :product="product" 
+      />
+    </div>
+
+    <GalleryEmptyState v-else />
   </div>
 </template>
