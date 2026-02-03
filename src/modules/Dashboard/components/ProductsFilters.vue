@@ -9,11 +9,12 @@ defineProps<{
   onlyWithImage: boolean;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: "update:search", value: string): void;
   (e: "update:status", value: ProductStatus | "ALL"): void;
   (e: "update:onlyWithImage", value: boolean): void;
 }>();
+
 </script>
 
 <template>

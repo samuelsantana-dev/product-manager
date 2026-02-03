@@ -4,13 +4,16 @@ import MetricsCards from "@/modules/Dashboard/components/MetricCard.vue";
 import ProductsFilters from "@/modules/Dashboard/components/ProductsFilters.vue";
 import { ref, computed } from "vue";
 import { ProductStatus, type IProduct } from "@/modules/Dashboard/types/product";
-import { useProductsStore } from "@/modules/Dashboard/stores/products.store";
+import {ProductsStore} from "@/shared/stores/product/products.store";
+import BaseButton  from "@/shared/components/ui/BaseButton.vue";
+import { jsonExportDownload } from "@/shared/utils";
+import { ExportToExcel } from "@/shared/utils/excel";
 
 const search = ref("");
 const statusFilter = ref<ProductStatus | "ALL">("ALL");
 const onlyWithImage = ref(false);
 
-const store = useProductsStore();
+const store = ProductsStore();
 
 const totalWithImage = computed(
   () => store.products.filter((p) => !!p.Mirakl_Image).length,
@@ -70,6 +73,22 @@ const handleEdit = (product: IProduct) => {
   }
 };
 
+const addNewProduct = () => {
+  const name = prompt("Nome do produto:");
+  if (!name) return;
+
+  const newProduct: IProduct = {
+    ID: `NEW-${Date.now()}`, 
+    EAN: "0000000000000",
+    Name: name,
+    Status: ProductStatus.OK,
+    Score: 0,
+    Mirakl_Image: "",
+    BB_Image_Url: ""
+  };
+
+  store.addProduct(newProduct);
+};
 
 </script>
 
@@ -99,10 +118,28 @@ const handleEdit = (product: IProduct) => {
         color="text-red-600"
       />
     </div>
-    <div>
-      <ProductsFilters :search="search" :status="statusFilter" :onlyWithImage="onlyWithImage"
-        @update:search="search = $event" @update:status="statusFilter = $event"
-        @update:onlyWithImage="onlyWithImage = $event" />
+    <div class="flex justify-between">
+      <div class="flex gap-4 flex-wrap">
+        <ProductsFilters :search="search" :status="statusFilter" :onlyWithImage="onlyWithImage"
+          @update:search="search = $event" @update:status="statusFilter = $event"
+          @update:onlyWithImage="onlyWithImage = $event" />
+      </div>
+     <div class="flex items-center gap-2 flex-wrap">
+        <BaseButton size="sm" variant="success" @click="addNewProduct">
+          + Novo Produto
+        </BaseButton>
+
+        <div class="flex gap-2 border-l pl-2 ml-2">
+          <BaseButton size="sm" variant="secondary" @click="jsonExportDownload(store.products)">
+            📥 Exportar JSON
+          </BaseButton>
+
+          <BaseButton size="sm" variant="excel" @click="ExportToExcel(store.products)">
+            📊 Exportar Excel
+          </BaseButton>
+        </div>
+      </div>
+
     </div>
     </div>
      <div>

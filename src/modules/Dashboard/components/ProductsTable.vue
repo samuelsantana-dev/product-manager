@@ -41,7 +41,7 @@ defineEmits<{
             <span
               :class="product.Status === 'OK' ? 'text-green-600' : 'text-red-600'"
             >
-             {{ product.Status === 'OK' ? 'OK' : 'Indisponível' }}
+             {{ product.Status }}
             </span>
           </td>
           <td>{{ product.ID }}</td>

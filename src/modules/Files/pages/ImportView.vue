@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import ImportFile from '@/modules/Files/components/ImportFile.vue'
-import { useProductsStore } from '@/modules/Dashboard/stores/products.store'
+import { ProductsStore } from '@/shared/stores/product/products.store'
 
-const store = useProductsStore()
+const store = ProductsStore()
 </script>
 <template>
   <div class="p-8">
