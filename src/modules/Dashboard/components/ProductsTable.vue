@@ -7,7 +7,7 @@ defineProps<{
 
 defineEmits<{
   (e: 'edit', product: IProduct): void
-  (e: "delete", id: string | number): void;
+  (e: "delete", id: string ): void;
 }>();
 
 </script>

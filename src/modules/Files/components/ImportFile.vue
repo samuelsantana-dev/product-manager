@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useProductsStore } from '@/modules/Dashboard/stores/products.store'
+import { ProductsStore } from '@/shared/stores/product/products.store'
 import { ExcelService } from '@/shared/utils/excel'
 
-const store = useProductsStore()
+const store = ProductsStore()
 
 const handleFile = async (event: Event) => {
   const input = event.target as HTMLInputElement
