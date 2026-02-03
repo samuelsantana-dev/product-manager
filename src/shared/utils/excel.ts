@@ -41,3 +41,12 @@ export const ExcelService = {
     })
   }
 }
+
+export function ExportToExcel(products: IProduct[]) {
+  const worksheet = XLSX.utils.json_to_sheet(products);
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Produtos");
+
+  XLSX.writeFile(workbook, `produtos_exportados_${new Date().getTime()}.xlsx`);
+};

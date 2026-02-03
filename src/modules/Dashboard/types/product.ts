@@ -4,9 +4,10 @@ export enum ProductStatus {
   OK = 'OK',
   INDISPONIVEL = 'INDISPONIVEL',
   ERRO = 'ERRO',
+  ALL = 'ALL'
 }
 export interface IProduct {
-  ID: string | number
+  ID: string
   EAN: string
   Name: string
   Status: string

@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { useProductsStore } from '@/modules/Dashboard/stores/products.store'
+import { ProductsStore } from '@/shared/stores/product/products.store'
 import type { ProductStatus } from '@/modules/Dashboard/types/product'
 
 interface GalleryProps {
@@ -9,7 +9,7 @@ interface GalleryProps {
 }
 
 export function useProductGallery(props: GalleryProps) {
-  const store = useProductsStore()
+  const store = ProductsStore()
 
   const filteredProducts = computed(() => {
     const searchValue = props.search.toLowerCase()
