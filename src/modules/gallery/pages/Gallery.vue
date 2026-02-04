@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import type { ProductStatus } from '@/modules/Dashboard/types/product';
+import type { IProduct, ProductStatus } from '@/modules/Dashboard/types/product';
 import ProductsGallery from '@/modules/gallery/components/ProductsGallery.vue'
 import { ref } from 'vue';
 const search = ref('')
 const status = ref<ProductStatus | 'ALL'>('ALL')
 const onlyWithImage = ref(false)
+const editingProduct = ref<IProduct | null>(null)
+const isEditModalOpen = ref(false)
+
+const handleEdit = (product: IProduct) => {
+  editingProduct.value = product
+  isEditModalOpen.value = true
+}
 
 
 </script>
@@ -17,6 +24,8 @@ const onlyWithImage = ref(false)
       v-model:search="search"
       v-model:status="status"
       v-model:onlyWithImage="onlyWithImage"
+        @edit="handleEdit"
+
     />
   </div>
 </template>

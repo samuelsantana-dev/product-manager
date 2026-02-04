@@ -4,7 +4,7 @@ import BaseModal from '@/shared/components/ui/BaseModal.vue'
 import BaseInput from '@/shared/components/ui/BaseInput.vue'
 import BaseSelect from '@/shared/components/ui/BaseSelect.vue'
 import BaseButton from '@/shared/components/ui/BaseButton.vue'
-import { ProductStatus, type IProduct, type ProductForm } from '../types/product'
+import { ProductStatus, type IProduct, type ProductForm } from '../../../modules/Dashboard/types/product'
 
 const props = defineProps<{
   open: boolean

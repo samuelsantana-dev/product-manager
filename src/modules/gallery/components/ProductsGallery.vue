@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import  GalleryEmptyState  from '@/modules/gallery/components/GalleryEmptyState.vue'
+import { ref } from 'vue'
+import GalleryEmptyState from '@/modules/gallery/components/GalleryEmptyState.vue'
 import ProductCard from '@/shared/components/product/ProductCard.vue'
-import type { ProductStatus } from '@/modules/Dashboard/types/product'
 import GalleryFilters from '@/modules/gallery/components/GalleryFilters.vue'
-import { useProductGallery } from '../composables/useProductGallery';
+import ProductEditModal from "@/shared/components/product/ProductEditModal.vue";
+import type { IProduct, ProductStatus } from '@/modules/Dashboard/types/product'
+import { useProductGallery } from '@/modules/gallery/composables/useProductGallery';
+import { ProductsStore } from '@/shared/stores/product/products.store'
 
+const store = ProductsStore();
 const props = defineProps<{
   search: string
   status: ProductStatus | 'ALL'
@@ -15,12 +19,27 @@ const emit = defineEmits<{
   (e: 'update:search', value: string): void
   (e: 'update:status', value: ProductStatus | 'ALL'): void
   (e: 'update:onlyWithImage', value: boolean): void
+  (e: 'edit', product: IProduct): void
 }>()
 
 const { filteredProducts } = useProductGallery(props)
+
+const editingProduct = ref<IProduct | null>(null)
+const isEditModalOpen = ref(false)
+
+const handleOpenEdit = (product: IProduct) => {
+  editingProduct.value = { ...product } 
+  isEditModalOpen.value = true
+}
+
+const handleSaveProduct = (updatedProduct: IProduct) => {
+  store.updateProduct(updatedProduct)
+  isEditModalOpen.value = false
+  editingProduct.value = null
+}
 </script>
 
-<<template>
+<template>
   <div class="flex flex-col gap-8">
     <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
       <GalleryFilters
@@ -38,9 +57,18 @@ const { filteredProducts } = useProductGallery(props)
         v-for="product in filteredProducts" 
         :key="product.ID" 
         :product="product" 
+        @edit="handleOpenEdit" 
       />
     </div>
 
     <GalleryEmptyState v-else />
+
+    <ProductEditModal
+      v-if="isEditModalOpen"
+      :open="isEditModalOpen"
+      :product="editingProduct"
+      @close="isEditModalOpen = false"
+      @save="handleSaveProduct"
+    />
   </div>
 </template>

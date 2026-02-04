@@ -8,7 +8,7 @@ import {ProductsStore} from "@/shared/stores/product/products.store";
 import BaseButton  from "@/shared/components/ui/BaseButton.vue";
 import { jsonExportDownload } from "@/shared/utils";
 import { ExportToExcel } from "@/shared/utils/excel";
-import ProductEditModal from "@/modules/Dashboard/components/ProductEditModal.vue";
+import ProductEditModal from "@/shared/components/product/ProductEditModal.vue";
 const search = ref("");
 const statusFilter = ref<ProductStatus | "ALL">("ALL");
 const onlyWithImage = ref(false);
@@ -64,7 +64,6 @@ const filteredProducts = computed(() => {
     return matchesSearch && matchesStatus && matchesImage;
   });
 });
-console.log("🚀 ~ filteredProducts:", filteredProducts)
 
 const handleEdit = (product: IProduct) => {
   editingProduct.value = product
