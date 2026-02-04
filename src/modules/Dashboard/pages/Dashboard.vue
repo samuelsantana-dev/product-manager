@@ -8,10 +8,13 @@ import {ProductsStore} from "@/shared/stores/product/products.store";
 import BaseButton  from "@/shared/components/ui/BaseButton.vue";
 import { jsonExportDownload } from "@/shared/utils";
 import { ExportToExcel } from "@/shared/utils/excel";
-
+import ProductEditModal from "@/modules/Dashboard/components/ProductEditModal.vue";
 const search = ref("");
 const statusFilter = ref<ProductStatus | "ALL">("ALL");
 const onlyWithImage = ref(false);
+const editingProduct = ref<IProduct | null>(null)
+const isEditModalOpen = ref(false)
+
 
 const store = ProductsStore();
 
@@ -61,17 +64,20 @@ const filteredProducts = computed(() => {
     return matchesSearch && matchesStatus && matchesImage;
   });
 });
+console.log("🚀 ~ filteredProducts:", filteredProducts)
 
 const handleEdit = (product: IProduct) => {
-  const newName = prompt("Novo nome do produto:", product.Name);
+  editingProduct.value = product
+  isEditModalOpen.value = true
+}
 
-  if (newName) {
-    store.updateProduct({
-      ...product,
-      Name: newName,
-    });
-  }
-};
+
+const handleSaveProduct = (product: IProduct) => {
+  store.updateProduct(product)
+  isEditModalOpen.value = false
+  editingProduct.value = null
+}
+
 
 const addNewProduct = () => {
   const name = prompt("Nome do produto:");
@@ -148,6 +154,14 @@ const addNewProduct = () => {
       @edit="handleEdit"
       @delete="store.removeProduct"
     />
+
+    <ProductEditModal
+      :open="isEditModalOpen"
+      :product="editingProduct"
+      @close="isEditModalOpen = false"
+      @save="handleSaveProduct"
+    />
+
   </div>
   
 </template>

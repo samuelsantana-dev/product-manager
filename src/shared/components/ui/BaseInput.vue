@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ modelValue: string; placeholder?: string }>()
+defineProps<{ modelValue: string; placeholder?: string, type?: string | number }>()
 defineEmits(['update:modelValue'])
 </script>
 
