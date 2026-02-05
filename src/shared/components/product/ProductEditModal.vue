@@ -9,6 +9,7 @@ import { ProductStatus, type IProduct, type ProductForm } from '../../../modules
 const props = defineProps<{
   open: boolean
   product: IProduct | null
+  mode: "create" | "edit";
 }>()
 
 const emit = defineEmits<{
@@ -52,7 +53,7 @@ const handleSave = () => {
 </script>
 
 <template>
-  <BaseModal :open="open" title="Editar Produto" @close="$emit('close')">
+  <BaseModal :open="open" :title="mode === 'create' ? 'Novo Produto' : 'Editar Produto'" @close="$emit('close')">
     <div class="space-y-4">
       <BaseInput v-model="form.Name" label="Nome" />
       <BaseInput v-model="form.EAN" label="EAN" />

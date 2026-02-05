@@ -2,98 +2,36 @@
 import ProductsTable from "@/modules/Dashboard/components/ProductsTable.vue";
 import MetricsCards from "@/modules/Dashboard/components/MetricCard.vue";
 import ProductsFilters from "@/modules/Dashboard/components/ProductsFilters.vue";
-import { ref, computed } from "vue";
-import { ProductStatus, type IProduct } from "@/modules/Dashboard/types/product";
-import {ProductsStore} from "@/shared/stores/product/products.store";
 import BaseButton  from "@/shared/components/ui/BaseButton.vue";
 import { jsonExportDownload } from "@/shared/utils";
 import { ExportToExcel } from "@/shared/utils/excel";
 import ProductEditModal from "@/shared/components/product/ProductEditModal.vue";
-const search = ref("");
-const statusFilter = ref<ProductStatus | "ALL">("ALL");
-const onlyWithImage = ref(false);
-const editingProduct = ref<IProduct | null>(null)
-const isEditModalOpen = ref(false)
+import {  useProductsDashboard } from "@/modules/Dashboard/composables/useDashboard";
+import { useProducCreatetEdit } from "../composables/useDashboard";
+
+const {
+  store,
+  search,
+  statusFilter,
+  onlyWithImage,
+  filteredProducts,
+  totalWithImage,
+  totalUnavailable,
+  totalOk,
+  totalErr,
+  averageScore
+} = useProductsDashboard();
 
 
-const store = ProductsStore();
+const {
+  editingProduct,
+  isEditModalOpen,
+  mode,
+  handleEdit,
+  handleSaveProduct,
+  handleCreate,
+} = useProducCreatetEdit();
 
-const totalWithImage = computed(
-  () => store.products.filter((p) => !!p.Mirakl_Image).length,
-);
-
-const totalUnavailable = computed(
-  () =>
-    store.products.filter((p) => p.Status === ProductStatus.INDISPONIVEL)
-      .length,
-);
-
-const totalOk = computed(
-  () =>
-    store.products.filter(
-      (p) => p.Status === ProductStatus.OK && p.Mirakl_Image && p.Score > 0,
-    ).length,
-);
-
-const totalErr = computed(
-  () => store.products.filter((p) => p.Status === ProductStatus.ERRO).length,
-);
-
-const averageScore = computed(() => {
-  if (!store.products.length) return 0;
-  const total = store.products.reduce((sum, p) => sum + p.Score, 0);
-  return Number((total / store.products.length).toFixed(2));
-});
-
-const filteredProducts = computed(() => {
-  return store.products.filter((product) => {
-    const searchValue = search.value.toLowerCase();
-
-    const matchesSearch =
-      product.Name.toLowerCase().includes(searchValue) ||
-      product.EAN.includes(searchValue) ||
-      String(product.ID).includes(searchValue);
-
-    const matchesStatus =
-      statusFilter.value === "ALL" ||
-      product.Status === statusFilter.value;
-
-    const matchesImage =
-      !onlyWithImage.value || !!product.Mirakl_Image;
-
-    return matchesSearch && matchesStatus && matchesImage;
-  });
-});
-
-const handleEdit = (product: IProduct) => {
-  editingProduct.value = product
-  isEditModalOpen.value = true
-}
-
-
-const handleSaveProduct = (product: IProduct) => {
-  store.updateProduct(product)
-  isEditModalOpen.value = false
-  editingProduct.value = null
-}
-
-
-const addNewProduct = () => {
-  const name = prompt("Nome do produto:");
-  if (!name) return;
-
-  const newProduct: IProduct = {
-    ID: `NEW-${Date.now()}`, 
-    EAN: "0000000000000",
-    Name: name,
-    Status: ProductStatus.OK,
-    Score: 0,
-    Mirakl_Image: "",
-    BB_Image_Url: ""
-  };
-
-  store.addProduct(newProduct);
-};
 
 </script>
 
@@ -130,7 +68,7 @@ const addNewProduct = () => {
           @update:onlyWithImage="onlyWithImage = $event" />
       </div>
      <div class="flex items-center gap-2 flex-wrap">
-        <BaseButton size="sm" variant="success" @click="addNewProduct">
+        <BaseButton size="sm" variant="success" @click="handleCreate">
           + Novo Produto
         </BaseButton>
 
@@ -157,6 +95,7 @@ const addNewProduct = () => {
     <ProductEditModal
       :open="isEditModalOpen"
       :product="editingProduct"
+      :mode="mode"
       @close="isEditModalOpen = false"
       @save="handleSaveProduct"
     />
