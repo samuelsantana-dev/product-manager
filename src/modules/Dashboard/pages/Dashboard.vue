@@ -72,28 +72,34 @@ const handleEdit = (product: IProduct) => {
 
 
 const handleSaveProduct = (product: IProduct) => {
-  store.updateProduct(product)
+  const exists = store.products.find(p => p.ID === product.ID)
+
+  if (exists) {
+    store.updateProduct(product)
+  } else {
+    store.addProduct(product)
+  }
+
   isEditModalOpen.value = false
   editingProduct.value = null
 }
+''
 
 
 const addNewProduct = () => {
-  const name = prompt("Nome do produto:");
-  if (!name) return;
-
-  const newProduct: IProduct = {
-    ID: `NEW-${Date.now()}`, 
-    EAN: "0000000000000",
-    Name: name,
+  editingProduct.value = {
+    ID: `NEW-${Date.now()}`,
+    EAN: "",
+    Name: "",
     Status: ProductStatus.OK,
     Score: 0,
     Mirakl_Image: "",
     BB_Image_Url: ""
-  };
+  }
 
-  store.addProduct(newProduct);
-};
+  isEditModalOpen.value = true
+}
+
 
 </script>
 
