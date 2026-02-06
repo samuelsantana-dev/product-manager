@@ -14,7 +14,7 @@ export const productSchema = z.object({
 
   Score: z
     .number()
-    .min(1, 'Score mínimo é 1')
+    .min(0, 'Score mínimo é 0')
     .max(100, 'Score máximo é 100'),
 
   BB_Image_Url: z

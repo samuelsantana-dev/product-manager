@@ -1,59 +1,52 @@
 <template>
-  <div class="p-6 space-y-6">
-    <h1 class="text-2xl font-bold">Dashboard</h1>
-    <div class="flex gap-4 flex-wrap">
+  <div class="p-4 md:p-6 space-y-6">
+    <h1 class="text-xl md:text-2xl font-bold text-gray-800">Dashboard</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       <MetricsCards label="Produtos com imagem" :value="totalWithImage" />
-      <MetricsCards
-        label="Indisponíveis"
-        :value="totalUnavailable"
-        color="text-red-600"
-      />
-      <MetricsCards
-        label="Produtos OK"
-        :value="totalOk"
-        color="text-green-600"
-      />
-      <MetricsCards
-        label="Score médio"
-        :value="averageScore"
-        color="text-blue-600"
-      />
-      <MetricsCards
-        label="Produtos com erro"
-        :value="totalErr"
-        color="text-red-600"
-      />
+      <MetricsCards label="Indisponíveis" :value="totalUnavailable" color="text-red-600" />
+      <MetricsCards label="Produtos OK" :value="totalOk" color="text-green-600" />
+      <MetricsCards label="Score médio" :value="averageScore" color="text-blue-600" />
+      <MetricsCards label="Produtos com erro" :value="totalErr" color="text-red-600" />
     </div>
-    <div class="flex justify-between">
-      <div class="flex gap-4 flex-wrap">
-        <ProductsFilters :search="search" :status="statusFilter" :onlyWithImage="onlyWithImage"
-          @update:search="search = $event" @update:status="statusFilter = $event"
-          @update:onlyWithImage="onlyWithImage = $event" />
+
+    <div class="flex flex-col lg:flex-row justify-between gap-4">
+      
+      <div class="w-full lg:w-auto">
+        <ProductsFilters 
+          :search="search" 
+          :status="statusFilter" 
+          :onlyWithImage="onlyWithImage"
+          @update:search="search = $event" 
+          @update:status="statusFilter = $event"
+          @update:onlyWithImage="onlyWithImage = $event" 
+        />
       </div>
-     <div class="flex items-center gap-2 flex-wrap">
-        <BaseButton size="sm" variant="success" @click="addNewProduct">
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <BaseButton size="sm" variant="success" @click="addNewProduct" class="w-full sm:w-auto">
           + Novo Produto
         </BaseButton>
 
-        <div class="flex gap-2 border-l pl-2 ml-2">
-          <BaseButton size="sm" variant="secondary" @click="jsonExportDownload(store.products)">
-            📥 Exportar JSON
+        <div class="flex gap-2 border-t sm:border-t-0 sm:border-l pt-2 sm:pt-0 sm:pl-2">
+          <BaseButton size="sm" variant="secondary" @click="jsonExportDownload(store.products)" class="flex-1">
+            📥 JSON
           </BaseButton>
 
-          <BaseButton size="sm" variant="excel" @click="ExportToExcel(store.products)">
-            📊 Exportar Excel
+          <BaseButton size="sm" variant="excel" @click="ExportToExcel(store.products)" class="flex-1">
+            📊 Excel
           </BaseButton>
         </div>
       </div>
+    </div>
 
+    <div class="overflow-x-auto rounded-lg border border-gray-100">
+      <ProductsTable
+        :products="filteredProducts"
+        @edit="handleEdit"
+        @delete="store.removeProduct"
+      />
     </div>
-    </div>
-     <div>
-    <ProductsTable
-      :products="filteredProducts"
-      @edit="handleEdit"
-      @delete="store.removeProduct"
-    />
 
     <ProductEditModal
       :open="isEditModalOpen"
@@ -61,9 +54,7 @@
       @close="isEditModalOpen = false"
       @save="handleSaveProduct"
     />
-
   </div>
-  
 </template>
 
 <script setup lang="ts">
