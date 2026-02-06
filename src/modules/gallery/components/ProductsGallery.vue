@@ -40,8 +40,8 @@ const handleSaveProduct = (updatedProduct: IProduct) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-8">
-    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100">
+  <div class="flex flex-col gap-6">
+    <div class="bg-white p-2 rounded-2xl shadow-sm border border-gray-100 sticky top-4 z-10">
       <GalleryFilters
         :search="props.search"
         :status="props.status"
@@ -52,7 +52,10 @@ const handleSaveProduct = (updatedProduct: IProduct) => {
       />
     </div>
 
-    <div v-if="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div 
+      v-if="filteredProducts.length > 0" 
+      class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 md:gap-6"
+    >
       <ProductCard 
         v-for="product in filteredProducts" 
         :key="product.ID" 
@@ -61,7 +64,7 @@ const handleSaveProduct = (updatedProduct: IProduct) => {
       />
     </div>
 
-    <GalleryEmptyState v-else />
+    <GalleryEmptyState v-else class="py-20" />
 
     <ProductEditModal
       v-if="isEditModalOpen"
