@@ -1,14 +1,30 @@
 <script setup lang="ts">
-defineProps<{ modelValue: string; placeholder?: string, type?: string | number }>()
-defineEmits(['update:modelValue'])
+const props = defineProps<{
+  modelValue: string | number
+  placeholder?: string
+  type?: 'text' | 'number' | 'email' | 'password'
+}>()
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string | number): void
+}>()
+
+const onInput = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value
+
+  emit(
+    'update:modelValue',
+    props.type === 'number' ? Number(value) : value
+  )
+}
 </script>
 
 <template>
   <input
     :value="modelValue"
-    @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-    type="text"
+    :type="type ?? 'text'"
     :placeholder="placeholder"
-    class="border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all w-64 text-sm"
+    @input="onInput"
+    class="border border-gray-200 rounded-lg px-4 py-2 w-64 text-sm"
   />
 </template>

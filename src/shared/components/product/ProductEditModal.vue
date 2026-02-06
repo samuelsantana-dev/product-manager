@@ -54,18 +54,43 @@ const handleSave = () => {
 <template>
   <BaseModal :open="open" title="Editar Produto" @close="$emit('close')">
     <div class="space-y-4">
-      <BaseInput v-model="form.Name" label="Nome" />
-      <BaseInput v-model="form.EAN" label="EAN" />
+      <BaseInput
+        v-model="form.Name"
+        label="Nome"
+        placeholder="Ex: Camiseta Dry Fit"
+      />
+
+      <BaseInput
+        v-model="form.EAN"
+        label="EAN"
+        placeholder="Ex: 7891234567890"
+      />
+
 
       <BaseSelect v-model="form.Status">
         <option :value="ProductStatus.OK">OK</option>
-        <option :value="ProductStatus.INDISPONIVEL">Indisponível</option>
+        <option :value="ProductStatus.INDISPONIVEL" placeholder="">Indisponível</option>
         <option :value="ProductStatus.ERRO">Erro</option>
       </BaseSelect>
 
-      <BaseInput :model-value="String(form.Score)" label="Score" />
-      <BaseInput v-model="form.BB_Image_Url" label="Imagem BB" />
-      <BaseInput v-model="form.Mirakl_Image" label="Imagem Fornecedor" />
+      <BaseInput
+        v-model="form.Score"
+        label="Score"
+        placeholder="Ex: 85"
+        type="number"
+      />
+
+      <BaseInput
+        v-model="form.BB_Image_Url"
+        label="Imagem BB"
+        placeholder="https://exemplo.com/imagem-bb.jpg"
+      />
+
+      <BaseInput
+        v-model="form.Mirakl_Image"
+        label="Imagem Fornecedor"
+        placeholder="https://exemplo.com/imagem-fornecedor.jpg"
+      />
 
       <div class="flex justify-end gap-2 pt-4">
         <BaseButton variant="secondary" @click="$emit('close')">
