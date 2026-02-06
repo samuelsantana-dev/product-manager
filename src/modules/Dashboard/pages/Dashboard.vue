@@ -141,7 +141,6 @@ const handleEdit = (product: IProduct) => {
 
 const handleSaveProduct = (product: IProduct) => {
   const exists = store.products.find(p => p.ID === product.ID)
-
   if (exists) {
     store.updateProduct(product)
   } else {
@@ -151,7 +150,6 @@ const handleSaveProduct = (product: IProduct) => {
   isEditModalOpen.value = false
   editingProduct.value = null
 }
-''
 
 
 const addNewProduct = () => {
