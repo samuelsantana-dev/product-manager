@@ -53,6 +53,7 @@
       :product="editingProduct"
       @close="isEditModalOpen = false"
       @save="handleSaveProduct"
+      :title="createProduct ? 'Criar Produto' : 'Editar Produto'"
     />
   </div>
 </template>
@@ -73,7 +74,7 @@ const statusFilter = ref<ProductStatus | "ALL">("ALL");
 const onlyWithImage = ref(false);
 const editingProduct = ref<IProduct | null>(null)
 const isEditModalOpen = ref(false)
-
+const createProduct = ref(false)
 
 const store = ProductsStore();
 
@@ -127,6 +128,7 @@ const filteredProducts = computed(() => {
 const handleEdit = (product: IProduct) => {
   editingProduct.value = product
   isEditModalOpen.value = true
+  createProduct.value = false
 }
 
 
@@ -140,6 +142,7 @@ const handleSaveProduct = (product: IProduct) => {
 
   isEditModalOpen.value = false
   editingProduct.value = null
+  createProduct.value = false
 }
 
 
@@ -155,6 +158,7 @@ const addNewProduct = () => {
   }
 
   isEditModalOpen.value = true
+  createProduct.value = true
 }
 
 

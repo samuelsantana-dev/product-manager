@@ -12,6 +12,7 @@ const errors = reactive<Record<string, string>>({})
 const props = defineProps<{
   open: boolean
   product: IProduct | null
+  title?: string
 }>()
 
 const emit = defineEmits<{
@@ -65,7 +66,7 @@ const handleSave = () => {
 </script>
 
 <template>
-  <BaseModal :open="open" title="Editar Produto" @close="$emit('close')">
+  <BaseModal :open="open" :title="title" @close="$emit('close')">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       
       <div class="sm:col-span-2">

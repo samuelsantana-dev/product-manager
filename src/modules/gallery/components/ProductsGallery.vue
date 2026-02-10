@@ -72,6 +72,7 @@ const handleSaveProduct = (updatedProduct: IProduct) => {
       :product="editingProduct"
       @close="isEditModalOpen = false"
       @save="handleSaveProduct"
+      :title="'Editar Produto'"
     />
   </div>
 </template>
