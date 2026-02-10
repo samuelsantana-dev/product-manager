@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { IProduct } from '@/modules/Dashboard/types/product'
 import BaseButton from '@/shared/components/ui/BaseButton.vue'; 
+import BaseImage from '@/shared/components/ui/BaseImage.vue'; 
 defineProps<{
   products: IProduct[]
 }>()
@@ -47,18 +48,20 @@ defineEmits<{
           <td>{{ product.ID }}</td>
           <td>{{ product.EAN }}</td>
          <td>
-            <img
+            <BaseImage
               :src="product.BB_Image_Url"
-              alt=""
-              class="h-12 w-auto object-contain"
+              :alt="product.Name"
+              variant="table"
             />
+
           </td>
           <td>
-            <img
+            <BaseImage
               :src="product.Mirakl_Image"
-              alt=""
-              class="h-12 w-auto object-contain"
+              :alt="product.Name"
+              variant="table"
             />
+
           </td>
           <td class="p-3 flex gap-2">
             <BaseButton size="sm" variant="secondary" @click="$emit('edit', product)">

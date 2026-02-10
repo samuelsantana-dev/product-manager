@@ -2,6 +2,7 @@
 import type { IProduct, ProductStatus } from '@/modules/Dashboard/types/product';
 import ProductBadge from '@/shared/components/product/ProductBadge.vue'
 import BaseButton from '@/shared/components/ui/BaseButton.vue'; 
+import BaseImage from '@/shared/components/ui/BaseImage.vue'; 
 
 
 const props = defineProps<{ product: IProduct }>()
@@ -17,12 +18,11 @@ const emit = defineEmits<{
     @click="emit('edit', props.product)"
   >
     <div class="relative aspect-square w-full bg-gray-50 rounded-xl flex items-center justify-center mb-4 overflow-hidden border border-transparent group-hover:border-blue-50 transition-colors">
-      <img
+      <BaseImage
         v-if="product.BB_Image_Url"
         :src="product.BB_Image_Url"
         :alt="product.Name"
-        class="object-contain h-full w-full p-4 transform group-hover:scale-110 transition-transform duration-500"
-        loading="lazy"
+        variant="card"
       />
       <div v-else class="flex flex-col items-center gap-2 text-gray-300">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
