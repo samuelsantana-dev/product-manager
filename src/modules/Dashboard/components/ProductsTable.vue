@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IProduct } from '@/modules/Dashboard/types/product'
-
+import BaseButton from '@/shared/components/ui/BaseButton.vue'; 
 defineProps<{
   products: IProduct[]
 }>()
@@ -61,19 +61,13 @@ defineEmits<{
             />
           </td>
           <td class="p-3 flex gap-2">
-            <button
-              class="px-3 py-1 text-sm rounded bg-blue-500 text-white"
-              @click="$emit('edit', product)"
-            >
+            <BaseButton size="sm" variant="secondary" @click="$emit('edit', product)">
               Editar
-            </button>
+            </BaseButton>
 
-            <button
-              class="px-3 py-1 text-sm rounded bg-red-500 text-white"
-              @click="$emit('delete', product.ID)"
-            >
+            <BaseButton size="sm" variant="danger" @click="$emit('delete', product.ID)">
               Excluir
-            </button>
+            </BaseButton>
           </td>
         </tr>
       </tbody>

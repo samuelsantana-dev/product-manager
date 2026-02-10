@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import BaseButton from '@/shared/components/ui/BaseButton.vue'; 
+
 defineProps<{
   open: boolean
   title?: string
@@ -22,12 +24,9 @@ defineEmits<{
             {{ title }}
           </h2>
 
-          <button
-            class="text-gray-400 hover:text-gray-600"
-            @click="$emit('close')"
-          >
-            ✕
-          </button>
+          <BaseButton variant="outline" size="sm" @click="$emit('close')">
+            x
+          </BaseButton>
         </div>
 
         <slot />
